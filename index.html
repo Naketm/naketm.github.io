@@ -1,4 +1,560 @@
-<script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naketm - Developer Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c1e 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated stars background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .star:nth-child(odd) {
+            animation-delay: 1s;
+        }
+
+        .star:nth-child(3n) {
+            animation-delay: 2s;
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 4rem 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #64b5f6, #42a5f5, #1e88e5, #1976d2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(100, 181, 246, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #b0bec5;
+            margin-bottom: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 0.7rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-link:hover {
+            background: rgba(100, 181, 246, 0.2);
+            border-color: #64b5f6;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(100, 181, 246, 0.3);
+        }
+
+        /* Main content */
+        main {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(15px);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(100, 181, 246, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(100, 181, 246, 0.5);
+            box-shadow: 0 20px 40px rgba(100, 181, 246, 0.2);
+        }
+
+        .project-card:hover::before {
+            left: 100%;
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #64b5f6;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .project-description {
+            color: #cfd8dc;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-tag {
+            padding: 0.3rem 0.8rem;
+            background: rgba(100, 181, 246, 0.2);
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: #64b5f6;
+            border: 1px solid rgba(100, 181, 246, 0.3);
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .project-link {
+            padding: 0.7rem 1.5rem;
+            background: linear-gradient(45deg, #1976d2, #42a5f5);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .project-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(25, 118, 210, 0.4);
+        }
+
+        .project-link.demo {
+            background: linear-gradient(45deg, #7b1fa2, #ab47bc);
+        }
+
+        .project-link.demo:hover {
+            box-shadow: 0 8px 20px rgba(123, 31, 162, 0.4);
+        }
+
+        /* Icons */
+        .icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            background: rgba(100, 181, 246, 0.3);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(10px) rotate(240deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .nav-links { gap: 1rem; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .project-links { justify-content: center; }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #64b5f6, #1976d2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <header>
+        <h1>Naketm</h1>
+        <p class="subtitle">Game Developer & Software Engineer</p>
+        <nav class="nav-links">
+            <a href="#projects" class="nav-link">Projects</a>
+            <a href="https://github.com/Naketm" class="nav-link" target="_blank">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                GitHub
+            </a>
+        </nav>
+    </header>
+
+    <main>
+        <h2 class="section-title fade-in">Featured Projects</h2>
+        
+        <div class="projects-grid">
+            <div class="project-card fade-in">
+                <h3 class="project-title">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    Dictionary Module w/ Parallelization
+                </h3>
+                <p class="project-description">
+                    Advanced Luau dictionary implementation featuring parallel processing capabilities for high-performance data operations in Roblox. Optimized for large-scale data manipulation with concurrent execution support.
+                </p>
+                <div class="project-tech">
+                    <span class="tech-tag">Luau</span>
+                    <span class="tech-tag">Parallel Processing</span>
+                    <span class="tech-tag">Data Structures</span>
+                    <span class="tech-tag">Performance</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/Naketm/rblx-projects/blob/main/Dictionary_Module.luau" class="project-link" target="_blank">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        View Code
+                    </a>
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <h3 class="project-title">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5L21 16z"/>
+                    </svg>
+                    Advanced Combat System
+                </h3>
+                <p class="project-description">
+                    Comprehensive moveset system featuring teleportation mechanics, fluid combat animations, and responsive controls. Built for high-performance gameplay with smooth character interactions and advanced physics.
+                </p>
+                <div class="project-tech">
+                    <span class="tech-tag">Game Development</span>
+                    <span class="tech-tag">Combat System</span>
+                    <span class="tech-tag">Animation</span>
+                    <span class="tech-tag">Physics</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://vimeo.com/1110752597" class="project-link demo" target="_blank">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        Watch Demo
+                    </a>
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <h3 class="project-title">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    Radial Menu System
+                </h3>
+                <p class="project-description">
+                    Intuitive circular interface system with smooth animations and customizable layouts. Perfect for game UI/UX with touch and mouse support, featuring elegant transitions and responsive design.
+                </p>
+                <div class="project-tech">
+                    <span class="tech-tag">UI/UX</span>
+                    <span class="tech-tag">Interface Design</span>
+                    <span class="tech-tag">User Experience</span>
+                    <span class="tech-tag">Animation</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://vimeo.com/996804349" class="project-link demo" target="_blank">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        Watch Demo
+                    </a>
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <h3 class="project-title">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    Top-Down Shooter
+                </h3>
+                <p class="project-description">
+                    Fast-paced action game with precise controls, projectile physics, and engaging gameplay mechanics. Features optimized performance for smooth 60+ FPS gameplay with dynamic lighting and effects.
+                </p>
+                <div class="project-tech">
+                    <span class="tech-tag">Game Development</span>
+                    <span class="tech-tag">Physics</span>
+                    <span class="tech-tag">Action Game</span>
+                    <span class="tech-tag">Performance</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://vimeo.com/996799508" class="project-link demo" target="_blank">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        Watch Demo
+                    </a>
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <h3 class="project-title">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                    </svg>
+                    ECS System (Sparse Set)
+                </h3>
+                <p class="project-description">
+                    High-performance Entity Component System implementation using sparse set data structures. Designed for scalable game architecture with efficient memory usage and fast component queries.
+                </p>
+                <div class="project-tech">
+                    <span class="tech-tag">Architecture</span>
+                    <span class="tech-tag">ECS Pattern</span>
+                    <span class="tech-tag">Performance</span>
+                    <span class="tech-tag">Data Structures</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://medal.tv/games/roblox-studio/clips/l2rQmgRHi6opZiWHx?invite=cr-MSxlZDMsNDQwNDM2NTY5&v=13" class="project-link demo" target="_blank">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        Watch Demo
+                    </a>
+                    <a href="https://github.com/Naketm/ECS_ATTEMPT/tree/main" class="project-link" target="_blank">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        View Code
+                    </a>
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <h3 class="project-title">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                    </svg>
+                    Procedural Generation System
+                </h3>
+                <p class="project-description">
+                    Advanced algorithms for generating infinite, diverse game worlds. Features noise-based terrain generation, biome systems, and optimized chunk loading for seamless exploration experiences.
+                </p>
+                <div class="project-tech">
+                    <span class="tech-tag">Procedural Gen</span>
+                    <span class="tech-tag">Algorithms</span>
+                    <span class="tech-tag">World Building</span>
+                    <span class="tech-tag">Optimization</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/Naketm/Procedural_Generation" class="project-link" target="_blank">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        View Code
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numberOfStars = 100;
+
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                
+                const size = Math.random() * 3 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                
+                star.style.animationDelay = Math.random() * 3 + 's';
+                
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function createParticles() {
+            const main = document.querySelector('main');
+            const numberOfParticles = 20;
+
+            for (let i = 0; i < numberOfParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                
+                const size = Math.random() * 8 + 3;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                
+                main.appendChild(particle);
+            }
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = '0.2s';
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            createStars();
+            createParticles();
+            
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach((el, index) => {
+                el.style.animationDelay = (index * 0.1) + 's';
+            });
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            const stars = document.querySelectorAll('.star');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+
+            stars.forEach((star, index) => {
+                const speed = (index % 5) * 0.5;
+                const x = (mouseX * speed);
+                const y = (mouseY * speed);
+                
+                star.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+            });
+        });
+    </script>
+        <script>
         let cursorTrails = [];
         const cursor = document.querySelector('.custom-cursor');
 
